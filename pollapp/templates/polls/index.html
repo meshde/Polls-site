@@ -1,0 +1,11 @@
+{% if lq_list %}
+<ul>
+{% for q in lq_list %}
+<li>
+<a href="/polls/{{ q.id }}/">{{ q.qtxt }}</a>
+</li>
+{% endfor %}
+</ul>
+{% else %}
+<p> No polls </p>
+{% endif %}
