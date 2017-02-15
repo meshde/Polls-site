@@ -1,0 +1,8 @@
+<h1>{{question.qtxt}}</h1>
+<ul>
+{% for choice in question.choice_set.all %}
+<li>{{choice.ctxt}} : {{choice.votes}} vote{{choice.votes|pluralize}}</li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'pollapp:detail' question.id %}">Vote again?</a>
