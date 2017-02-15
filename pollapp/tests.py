@@ -26,14 +26,14 @@ class QuestionViewTest(TestCase):
 		r = self.client.get(reverse('pollapp:index'))
 		self.assertEqual(r.status_code,200)
 		self.assertQuerysetEqual(r.context['lq_list'],[])
-		self.assertConatins(r,'No polls')
+		self.assertContains(r,'No questions')
 	def test_index_view_future_quest(self):
 		#Questions of the future must not be displayed
 		Question.objects.create(qtxt='test',pub_date=timezone.now()+datetime.timedelta(days=30))
 		r = self.client.get(reverse('pollapp:index'))
 		self.assertEqual(r.status_code,200)
 		self.assertQuerysetEqual(r.context['lq_list'],[])
-		self.assertConatins(r,'No polls')
+		self.assertContains(r,'No questions')
 	def test_index_view_past_and_future_quest(self):
 		#future questions must be ignored
 		Question.objects.create(qtxt='future',pub_date=timezone.now()+datetime.timedelta(days=30))
@@ -53,11 +53,11 @@ class QuestionDetailViewTest(TestCase):
 		r = self.client.get(reverse('pollapp:detail',args=(q.id,)))
 		self.assertContains(r,q.qtxt)
 	def test_detail_view_no_choice(self):
-		q = Question.objects.create(qtxt='Past', pub_date=timezone.now()+datetime.timedelta(days=30))
+		q = Question.objects.create(qtxt='Past', pub_date=timezone.now()+datetime.timedelta(days=-5))
 		r = self.client.get(reverse('pollapp:detail',args=(q.id,)))
 		self.assertContains(r,'No choices.Please Contact Admin')
 	def test_detail_view_choice(self):
-		q = Question.objects.create(qtxt='Past' ,pub_date=timezone.now()+datetime.timedelta(days=30))
+		q = Question.objects.create(qtxt='Past' ,pub_date=timezone.now()+datetime.timedelta(days=-5))
 		c = q.choice_set.create(ctxt='choice')
 		r = self.client.get(reverse('pollapp:detail',args=(q.id,)))
 		self.assertContains(r,c.ctxt)
@@ -72,11 +72,11 @@ class QuestionResultsViewTest(TestCase):
 		r = self.client.get(reverse('pollapp:results',args=(q.id,)))
 		self.assertContains(r,q.qtxt)
 	def test_detail_view_no_choice(self):
-		q = Question.objects.create(qtxt='Past', pub_date=timezone.now()+datetime.timedelta(days=30))
+		q = Question.objects.create(qtxt='Past', pub_date=timezone.now()+datetime.timedelta(days=-5))
 		r = self.client.get(reverse('pollapp:results',args=(q.id,)))
 		self.assertContains(r,'No choices.Please Contact Admin')
 	def test_detail_view_choice(self):
-		q = Question.objects.create(qtxt='Past',pub_date=timezone.now()+datetime.timedelta(days=30))
+		q = Question.objects.create(qtxt='Past',pub_date=timezone.now()+datetime.timedelta(days=-5))
 		c = q.choice_set.create(ctxt='choice')
 		r = self.client.get(reverse('pollapp:results',args=(q.id,)))
 		self.assertContains(r,c.ctxt)
