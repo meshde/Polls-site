@@ -13,7 +13,8 @@ class Question(models.Model):
 	def __str__(self):
 		return self.qtxt
 	def recent(self):
-		return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+		now = timezone.now()
+		return now - datetime.timedelta(days=1) <= self.pub_date <= now
 		
 #Next line needed to use __str__ in Python 2.7
 @python_2_unicode_compatible
